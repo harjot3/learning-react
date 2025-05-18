@@ -1,8 +1,80 @@
-.header {
+/* Variables */
 
+:root {
+    --background_color: teal;
+    --nav_bar_color: darkslategrey;
 }
 
-.footer {
-    margin: 10px;
-  }
+body {
+    /* 
+    Potential Background Colors: 
+    
+        - cornsilk
+        - lemonchiffon
+
+    */
+
+    background-color:var(--background_color);
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: auto;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 10vh);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 1.5rem;
+    
+    background-color: var(--nav_bar_color);
+    padding:5px;
+    max-height: 10vh;
+    width: 100vw;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+}
+
+.navbar a:hover {
+    background-color: white;
+}
+
+.navbar .navbarBrandName {
+    margin: 0 0 0 10px;
+}
+
+.navbar .navbarLinks {
+    margin: 0 10px 0 0;
+}
+
+.navbarLinks li {
+    list-style-type: none;
+}
+
+.navbarLinks img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-right: 30px;
+}
+
+
+.navbarLinks a:hover {
+    background-color: var(--nav_bar_color);
+}
+
+
+
+
 

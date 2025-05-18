@@ -1,16 +1,44 @@
-import Header from "./Practice/Header.jsx"
-import Footer from "./Practice/Footer.jsx"
-import Card from "./Practice/Card/Card.jsx"
-import Button from "./Practice/Button/Button.jsx"
+import { Routes, Route, Link } from 'react-router-dom';
+import SignUp from "./pages/SignUp/signup.jsx"
+import Login from "./pages/Login/login.jsx"
+import Home from "./pages/Home/home.jsx"
 
-function App() {
+function App(props) {
 
     return (
       <>
-        <Header/>
-        <Card/>
-        <Button/>
-        <Footer/>
+        <nav className="navbar">
+            <div class="navbarBrandName"> 
+                {props.isLogged ? 
+                  <Link to="/home">Joti's Expense Tracker</Link> :
+                  <Link to="/login">Joti's Expense Tracker</Link> 
+                }
+               
+            </div>
+
+            <div className="navbarLinks">
+              <ul>
+
+                  {props.isLogged ? 
+                    <Link to="/home">
+                      <img src="/vagabond.png"/>
+                    </Link>
+                    :
+                    <li>
+                      <Link to="/signup">Sign Up</Link> | <Link to="/login">Login</Link> 
+                    </li>
+                  }
+
+              </ul>
+            </div>
+
+        </nav>
+      
+        <Routes>
+          <Route path="/home" element={<Home/>}/>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/signup" element={<SignUp/>}/>
+        </Routes>
       </>
     );
 }
