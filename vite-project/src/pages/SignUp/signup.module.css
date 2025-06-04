@@ -4,18 +4,21 @@ a {
 }
 
 .container {
-    height: auto;
+
+    padding: 10px;
+
     min-width: 400px;
+
     background-color: white;
     border: 3px solid gray;
-    border-radius: 20px;
+    border-radius: 50px;
 
     text-align: center;
 }
 
 .container h1 {
-    margin-top: 30px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 
@@ -44,9 +47,19 @@ a {
     margin: 10px;
 }
 
+.formInput .verificationCode {
+ margin-right: 0%;
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+
 .formInput input::placeholder {
+    text-align:center;
     padding: 8px;
 }
+
 
 .register {
     display: inline-block;

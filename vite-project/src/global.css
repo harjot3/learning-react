@@ -4,6 +4,9 @@
     --background_color: teal;
     --nav_bar_color: darkslategrey;
 }
+*, *::before, *::after {
+    box-sizing: border-box;
+}
 
 body {
     /* 
@@ -17,7 +20,7 @@ body {
     background-color:var(--background_color);
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    overflow-x: auto;
+    overflow-x: hidden;
 }
 
 .flex {
@@ -25,6 +28,7 @@ body {
     justify-content: center;
     align-items: center;
     height: calc(100vh - 10vh);
+
 }
 
 .navbar {
@@ -38,6 +42,7 @@ body {
     padding:5px;
     max-height: 10vh;
     width: 100vw;
+
 }
 
 .navbar a {
@@ -54,7 +59,7 @@ body {
 }
 
 .navbar .navbarLinks {
-    margin: 0 10px 0 0;
+    margin: 0 20px 0 0;
 }
 
 .navbarLinks li {
