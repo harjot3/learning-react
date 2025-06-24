@@ -1,0 +1,26 @@
+.container {
+    padding: 20px;
+    background-color:white;
+    border: 3px solid gray;
+    border-radius: 50px;
+    text-align: center;
+
+}
+
+.container h1 {
+
+    padding: 2px;
+}
+
+.box {
+    display: inline-block;
+    background-color: lightgray;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+
+}
+
+.c1 {
+    margin-right: 0%;
+}

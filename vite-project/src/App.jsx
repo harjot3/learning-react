@@ -1,21 +1,23 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import SignUp from "./pages/SignUp/signup.jsx"
+import Verify from "./pages/Verify/verify.jsx"
 import Login from "./pages/Login/login.jsx"
 import Home from "./pages/Home/home.jsx"
-import ConfirmationEmail from "./pages/Email/confirmationEmail.jsx"
+import FrontPage from "./pages/Front/front.jsx"
+import FrontLoggedPage from './pages/FrontLogged/frontLogged.jsx';
 
+function App() {
 
-
-function App(props) {
+    const navigate = useNavigate();
 
     return (
       <>
         <nav className="navbar">
             <div className="navbarBrandName"> 
-                {props.isLogged ? 
-                  <Link to="/home">Joti's Expense Tracker</Link> 
+                {localStorage.getItem("isLogged") === "true" ? 
+                  <Link to="/frontLogged">Joti's Expense Tracker</Link> 
                       :
-                  <Link to="/login">Joti's Expense Tracker</Link> 
+                  <Link to="/">Joti's Expense Tracker</Link> 
                 }
                
             </div>
@@ -23,10 +25,21 @@ function App(props) {
             <div className="navbarLinks">
               <ul>
 
-                  {props.isLogged ? 
-                    <Link to="/home">
-                      <img src="/vagabond.png"/>
-                    </Link>
+                  {localStorage.getItem("isLogged") === "true" ? 
+                    <>
+                      <li>
+
+                        <Link to="/home">Dashboard</Link>
+
+                      </li>
+                      
+                      <li>
+                        <Link>
+                          <img src="/defaultpfp.jpg"/>
+                        </Link> 
+                      </li>
+                    </>
+                    
                     :
                     <li>
                       <Link to="/signup">Sign Up</Link> | <Link to="/login">Login</Link> 
@@ -36,15 +49,40 @@ function App(props) {
               </ul>
             </div>
 
-        </nav>
-
-
+        </nav>     
       
         <Routes>
-          <Route path="/home" element={<Home/>}/>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/signup" element={<SignUp/>}/>
-          <Route path="/email" element={<ConfirmationEmail/>}/>
+
+          <Route 
+            path="/" 
+            element={<FrontPage/>}
+          ></Route>
+
+          <Route 
+            path="/signup" 
+            element={<SignUp/>}
+          ></Route>
+
+          <Route 
+            path="/verify" 
+            element={<Verify/>}
+          ></Route>
+
+          <Route 
+            path="/login" 
+            element={<Login/>}
+          ></Route>
+
+          <Route
+            path="/frontLogged"
+            element={<FrontLoggedPage/>}
+          ></Route>
+
+          <Route 
+            path="/home" 
+            element={<Home/>}
+          ></Route>
+
         </Routes>
       </>
     );

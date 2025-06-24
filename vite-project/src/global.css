@@ -21,14 +21,14 @@ body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     overflow-x: hidden;
+    
 }
 
 .flex {
-    display: flex;
+     display: flex;
     justify-content: center;
     align-items: center;
     height: calc(100vh - 10vh);
-
 }
 
 .navbar {
@@ -60,10 +60,18 @@ body {
 
 .navbar .navbarLinks {
     margin: 0 20px 0 0;
+    padding: 5px;
+
 }
 
 .navbarLinks li {
+    font-size: 30px;
+    justify-content: center;
+    align-items: center;
     list-style-type: none;
+    display: inline-block;
+    padding: 10px;
+
 }
 
 .navbarLinks img {
@@ -74,6 +82,23 @@ body {
     margin-right: 30px;
 }
 
+.dropdown {
+    position: relative;
+}
+
+.dropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdownContent  {
+    display: flex; 
+}
 
 .navbarLinks a:hover {
     background-color: var(--nav_bar_color);
