@@ -15,12 +15,6 @@
 
         // Response from localhost:3000/api fetch response
         const [incomingMessageOne, setIncomingMessageOne] = useState('');
-        const [verificationCode, setVerificationCode] = useState('');
-
-        const [verificationCodeEntered, setVerificationCodeEntered] = useState('');
-        const [allowVerificationCodeMessageBox, setAllowVerificationCodeMessageBox] = useState(false);
-        const [correctVerificationCodeEntered, setCorrectVerificationCodeEntered] = useState(false);
-        const [demoMsg, setDemoMsg] = useState('');
 
         const navigate = useNavigate();
 
@@ -44,25 +38,18 @@
                 })
                 .then(function handleResponseData(response) {
                     setIncomingMessageOne(response.messageOne);
-
-                    if (!response.existingUsername && !response.existingEmail) {
-                        setAllowVerificationCodeMessageBox(true);
-                    }
-
-                    navigate('/verify', { 
-                        state : {
-                            "email" : email,
-                            "username" : username
-                        }
-                    })
-                
                 })
                 .catch(function catchError(error) {
                     console.log(error);
-                    
                 });
             }
         }
+
+        useEffect(function() {
+            if (incomingMessageOne === `Welcome to Joti's Expense Tracker`) {
+                navigate('/verify');
+            }
+        }, [incomingMessageOne])
 
         return( 
             <>
@@ -131,41 +118,6 @@
                         <p>{`${usernameLengthMessage}`}</p>
                         <p>{`${passwordLengthMessage}`}</p>   
                         </form>
-
-                            {allowVerificationCodeMessageBox ? (
-
-                                <>                                     
-                                    <p>{`To complete registration, please enter the verification code sent to ${enteredEmail}`}</p>
-                                    <p><b>{`Check your Junk Email if not in Inbox... ${verificationCode}`}</b></p>
-                                    <p>{`${demoMsg}`}</p>
-
-                                    <form onSubmit={handleVerificationCodeClick}>
-                                        <div className={`${styles.formInput} ${styles.verificationCode}`}>
-                                            <input 
-                                                className={styles.verificationCode}
-                                                type="text"
-                                                name="verificationCode"
-                                                id="verificationCode"
-                                                placeholder="Enter Verification Code"
-                                                onChange={function(event) {
-                                                    setVerificationCodeEntered(event.target.value);
-                                                }}
-                                            ></input>
-                                        </div>
-                                        <div className={styles.apples}> 
-                                            <button
-                                            type="submit"
-                                            >
-                                                Submit Verification Code
-                                            </button>
-                                        </div>
-                                    </form>
-
-
-                                </>
-                                ) : (
-                                <></> 
-                            )}
 
                         <div className={styles.login}>
                             <Link to="/login">Already have an account? Login!</Link> 

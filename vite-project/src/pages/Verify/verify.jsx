@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom';
 import styles from "./verify.module.css"
 
 function Verify() {
@@ -9,18 +8,144 @@ function Verify() {
 
     const [enteredVericationCode, setEnteredVericationCode] = useState('');
 
-    const state = useLocation();
+    const [selectedSendEmail, setSelectedSendEmail] = useState(false);
+
+    const [timer, setTimer] = useState(0)
+
+    const [message, setMessage] = useState('');
+
+    const [disableButton, setDisableButton] = useState(false);
+
+    const sendMail = function() {
+        if (timer < 1) {
+            fetch("", {
+                method : "POST",
+                headers : { "Header-Type" : "application/json" },
+                body : JSON.stringify({
+                    timer
+                })
+            })
+        }
+    }
+
+    const buttonToSendCode = function() {
+        setSelectedSendEmail(true);
+    }
+
+    const beginTimer = function() {
+        let time = 600; // 600 seconds, 10 minutes
+        setTimer(time);
+        setInterval(function() {
+            setTimer(time - 1)
+            time --;
+
+            if (time < 1) {
+                clearInterval;
+            }
+        }, 1000)
+    }
 
     useEffect(function() {
-        try {
-            setEmail(state.state.email);
-            setUsername(state.state.username)
-        } catch {
-
+        if (timer < 1) {
+            setDisableButton(false);
+        } else{
+            setDisableButton(true);
         }
-    }, [])
+    }, timer)
 
-    /*
+    return(
+        <>
+            <div className="flex">
+                <div className={styles.container}>
+                    <h1>Verification Code</h1>
+                    <h2>{`Welcome to Joti's Expense Tracker ${username}`}</h2>
+
+                    <button
+                        name="clickToSendCode" for="clickToSendCode"
+                        type="button" onClick={function() {
+                            buttonToSendCode();
+                            beginTimer();
+                        }}
+                    >
+                    Click Here to Send Verification Code
+                    </button>
+
+
+                    {selectedSendEmail ? 
+                        <>
+                            <p>{`${message}`}</p>
+                            <p>{`You can send another email in ${Math.floor(timer / 60)} minutes
+                            and ${timer % 60} seconds.`}</p>
+                            <p>{`Enter Verification Code Here:`}</p>
+
+                            <div className={styles.test}>
+                                <div className={styles.verificationCodeBox}>
+                                    <input
+                                    name="" for="" id=""
+                                    onChange={function(event) {
+                                        setEnteredVericationCode(event.target.value)
+                                    }}
+                                    ></input>
+                                </div>
+
+
+                                <div className={styles.submitButton}>
+                                    <button>
+                                        Click here
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+
+                        :
+                        <>
+                            
+                        </> }
+                </div>
+            </div>
+        </>
+    );
+}
+
+export default Verify;
+
+/*
+
+    {allowVerificationCodeMessageBox ? (
+
+                                <>                                     
+                                    <p>{`To complete registration, please enter the verification code sent to ${enteredEmail}`}</p>
+                                    <p><b>{`Check your Junk Email if not in Inbox... ${verificationCode}`}</b></p>
+                                    <p>{`${demoMsg}`}</p>
+
+                                    <form onSubmit={handleVerificationCodeClick}>
+                                        <div className={`${styles.formInput} ${styles.verificationCode}`}>
+                                            <input 
+                                                className={styles.verificationCode}
+                                                type="text"
+                                                name="verificationCode"
+                                                id="verificationCode"
+                                                placeholder="Enter Verification Code"
+                                                onChange={function(event) {
+                                                    setVerificationCodeEntered(event.target.value);
+                                                }}
+                                            ></input>
+                                        </div>
+                                        <div className={styles.apples}> 
+                                            <button
+                                            type="submit"
+                                            >
+                                                Submit Verification Code
+                                            </button>
+                                        </div>
+                                    </form>
+
+
+                                </>
+                                ) : (
+                                <></> 
+                            )}
+
 
     function handleVerificationCodeClick(event) {
             event.preventDefault(); 
@@ -53,35 +178,3 @@ function Verify() {
             }, [verificationCodeEntered])
 
     */
-
-    return(
-        <>
-            <div className="flex">
-                <div className={styles.container}>
-                    <h1>Verification Code</h1>
-                    <h2>{`Welcome to Joti's Expense Tracker ${username}`}</h2>
-                    <p>{`A verification code was sent to ${email}`}</p>
-
-                    <div className={styles.verificationCodeBox}>
-                        <input
-                        name="" for="" id=""
-                        onChange={function(event) {
-                            setEnteredVericationCode(event.target.value)
-                        }}
-                        ></input>
-                    </div>
-
-                    <p>{`${enteredVericationCode}`}</p>
-
-                    <div className={styles.submitButton}>
-                        <button>
-                            Enter here
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
-}
-
-export default Verify;

@@ -14,6 +14,8 @@ const nodeMailerUser = process.env.NODEMAILER_USER;
 const nodeMailerPass = process.env.NODEMAILER_PASS;
 const JWT_SecretKey = process.env.JWT_SecretKey;
 const port = process.env.PORT;
+
+const EXPRESS_SESSION = process.env.EXPRESS_SESSION;
 // ---------------------------------------------------------------------------------- //
 
 
@@ -26,6 +28,13 @@ var usersEntered = {};
 const express = require('express');
 const app = express();
 app.use(express.json()); 
+const session = require("express-session");
+app.use(session({
+  secret: EXPRESS_SESSION, 
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 600000 } // Expires after 600000 milliseconds (10 minutes)
+}));
 // ---------------------------------------------------------------------------------- //
 
 
@@ -53,7 +62,6 @@ const userSchema =  new mongoose.Schema({
 
 const userModel = mongoose.model("user", userSchema);
 // ----------------------------------------------------------------------------------- //
-
 var userEmail;
 var userUsername;
 var userPassword;
@@ -63,34 +71,31 @@ app.post("/api/register", async (request, response) => {
   // Get the information sent from front-end
   let { email, username, password } = request.body;
 
-  let messageOne;
+  if (!request.session.data) {
+  request.session.data = {};
+}
 
+  request.session.email = {email}
+
+  let messageOne;
   let existingUsername = await userModel.findOne( { username : username } );
   let existingEmail = await userModel.findOne( { email : email } );
-  let verification_code = Math.floor(Math.random() * (999999 - 111111) + 111111);   // random 6 digit code
 
   userEmail = email;
   userUsername = username;
   userPassword = password;
-  
 
   if (existingUsername) {
     messageOne = `The username ${username} already exists`;
   } else if (existingEmail) {
       messageOne = `The email ${email} already exists`;
   } else {
-    messageOne = `Welcome to Joti's Expense Tracker, ${username}!`
-    sendMail(email, verification_code);
+    messageOne = `Welcome to Joti's Expense Tracker`
   }
 
   // Send a response back 
   response.json({ 
-    "messageOne" : messageOne,
-    "existingUsername" : existingUsername ? true : false,
-    "existingEmail" : existingEmail ? true : false,
-    "verification_code" : verification_code,
-    "email" : email,
-    "username" : username
+    "messageOne" : messageOne
   });
 
   usersEntered.email = email ;
@@ -123,13 +128,71 @@ async function sendMail(email, code) {
 
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-      console.log(error);
     } else {
       console.log('Email sent');
     }
   });
 }
+
+/*
+let verification_code = Math.floor(Math.random() * (999999 - 111111) + 111111);   // random 6 digit code
+sendMail(email, verification_code);
+
+*/
 // ----------------------------------------------------------------------------------- //
+
+app.post("/api/sendMail", async function(request, response) {
+  let message;
+  let { seconds } = request.body;
+
+  let email = request.session.data.email;
+
+  function maskEmail(email) {
+    // johnathonsmith@outlook.com
+    
+     let maskedEmail;
+     if (email.length >= 5) {
+        try {
+          let [words, domain] = email.split("@");
+
+          if (!domain) {
+            throw "No Domain"
+          }
+
+          const firstTwoLetters = words.slice(0, 2);
+          const lastTwoLetters = words.slice(-2);
+
+          maskedEmail = `${firstTwoLetters}${'*'.repeat(words.length -     4)}${lastTwoLetters}@${domain}`;
+        } catch {
+
+          const firstTwoLetters = email.slice(0, 2);
+          const lastTwoLetters = email.slice(-2);
+
+          maskedEmail = `${firstTwoLetters}${'*'.repeat(email.length - 4)}${lastTwoLetters}`
+        }
+     } else {
+        return `${email[0]}${'*'.repeat(email.length - 1)}`
+     }
+
+    return maskedEmail;
+  }
+
+  email = maskEmail(email);
+
+  if (seconds !== 0) {
+      message = "It has not been 10 minutes"
+  } else {
+    let verification_code = Math.floor(Math.random() * (999999 - 111111) + 111111);   // random 6 digit code
+    request.session.data.code = verification_code;
+    sendMail(email, verification_code);
+    message = `Verification Code sent to ${email}`;
+  }
+
+  response.json({
+      message
+  })
+})
+
 
 // ----------------------------------------------------------------------------------- //
 app.post("/api/verify" , async function(request, response) {
@@ -179,8 +242,6 @@ app.post("/api/verifyToken", async function(request, response) {
   });
 
 })
-
-
 // ----------------------------------------------------------------------------------- //
 
 // ----------------------------------------------------------------------------------- //

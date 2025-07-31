@@ -8,9 +8,17 @@
 }
 
 .verificationCodeBox {
-    margin: 10px;
+    margin: 0px 0px 0px 0px;
 }
 
 .submitButton {
-    margin: 10px;
+    margin: 0px 0px 0px 0px;
+}
+
+.test {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 0px 10px 0px;
+
 }
